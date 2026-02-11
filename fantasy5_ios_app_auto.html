@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>California Fantasy 5 - Statistical Analysis</title>
+    
+    <!-- iOS Web App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fantasy 5">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- iOS Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><defs><linearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' style='stop-color:%23667eea'/><stop offset='100%25' style='stop-color:%23764ba2'/></linearGradient></defs><rect width='180' height='180' fill='url(%23grad)'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='80' fill='white' font-weight='bold'>F5</text></svg>">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            -webkit-overflow-scrolling: touch;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2em !important;
+            }
+            
+            .subtitle {
+                font-size: 0.95em !important;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            .stat-value {
+                font-size: 1.5em !important;
+            }
+            
+            .section {
+                padding: 20px !important;
+            }
+            
+            .container {
+                padding: 20px !important;
+            }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .update-status {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+        
+        .update-status.checking {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .update-status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .update-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .update-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 10px auto;
+            display: block;
+        }
+        
+        .update-button:active {
+            opacity: 0.8;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 15px;
+        }
+        
+        h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 30px;
+        }
+        
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .number-cell {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        
+        .number-cell:hover {
+            transform: scale(1.05);
+        }
+        
+        .hot {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .warm {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #2d3748;
+        }
+        
+        .cool {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #2d3748;
+        }
+        
+        .cold {
+            background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
+            color: #2d3748;
+        }
+        
+        .pattern-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .pattern-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .pattern-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .pattern-table tr:hover {
+            background: #f7fafc;
+        }
+        
+        .insight {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .insight-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .combination-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 0.9em;
+        }
+        
+        .combination-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .combination-table th:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #653a91 100%);
+        }
+        
+        .combination-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .combination-table tr:hover {
+            background: #f7fafc;
+        }
+        
+        .frequent-row {
+            background: #fef3e2;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎰 California Fantasy 5</h1>
+        <div class="subtitle">Statistical Analysis of Latest 100 Draws</div>
+        
+        <div id="updateStatus" class="update-status checking" style="display: none;">
+            Checking for latest data...
+        </div>
+        
+        <button id="refreshButton" class="update-button" style="display: none;">
+            🔄 Check for Updates
+        </button>
+        
+        <div id="mainContent">
+            <div class="loading">Loading data...</div>
+        </div>
+    </div>
+
+    <script>
+        // Main app data
+        let draws = [];
+        let chartInstance = null;
+        
+        // Check if we're running in standalone mode (installed as app)
+        const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+        
+        // Auto-fetch data on load
+        async function fetchLatestData() {
+            const updateStatusEl = document.getElementById('updateStatus');
+            updateStatusEl.style.display = 'block';
+            updateStatusEl.className = 'update-status checking';
+            updateStatusEl.textContent = 'Fetching latest Fantasy 5 data...';
+            
+            try {
+                // Fetch from lottery website
+                const response = await fetch('https://www.lotteryextreme.com/california/fantasy5-results');
+                const html = await response.text();
+                
+                // Parse the HTML to extract draw data
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const fetchedDraws = [];
+                const rows = doc.querySelectorAll('td');
+                
+                // Extract draws from the page
+                let currentDate = null;
+                let currentNumbers = [];
+                
+                for (let i = 0; i < rows.length; i++) {
+                    const text = rows[i].textContent.trim();
+                    
+                    // Check if it's a date
+                    if (text.match(/\d{1,2}\/\d{1,2}\/\d{4}/)) {
+                        if (currentDate && currentNumbers.length === 5) {
+                            fetchedDraws.push([currentDate, currentNumbers.sort((a, b) => a - b)]);
+                        }
+                        const parts = text.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+                        currentDate = `${parts[3]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+                        currentNumbers = [];
+                    }
+                    
+                    // Check if it's a number
+                    const num = parseInt(text);
+                    if (!isNaN(num) && num >= 1 && num <= 39 && currentNumbers.length < 5) {
+                        currentNumbers.push(num);
+                    }
+                }
+                
+                if (currentDate && currentNumbers.length === 5) {
+                    fetchedDraws.push([currentDate, currentNumbers.sort((a, b) => a - b)]);
+                }
+                
+                // If we got at least 50 draws, use them
+                if (fetchedDraws.length >= 50) {
+                    draws = fetchedDraws.slice(0, 100);
+                    
+                    // Save to localStorage
+                    localStorage.setItem('fantasy5_draws', JSON.stringify(draws));
+                    localStorage.setItem('fantasy5_last_update', new Date().toISOString());
+                    
+                    updateStatusEl.className = 'update-status success';
+                    updateStatusEl.textContent = `✓ Updated with ${draws.length} latest draws (Last: ${draws[0][0]})`;
+                    
+                    renderApp();
+                    
+                    setTimeout(() => {
+                        updateStatusEl.style.display = 'none';
+                    }, 3000);
+                    
+                    return true;
+                } else {
+                    throw new Error('Not enough data fetched');
+                }
+                
+            } catch (error) {
+                console.error('Fetch error:', error);
+                
+                // Try to load from localStorage
+                const savedDraws = localStorage.getItem('fantasy5_draws');
+                if (savedDraws) {
+                    draws = JSON.parse(savedDraws);
+                    const lastUpdate = localStorage.getItem('fantasy5_last_update');
+                    
+                    updateStatusEl.className = 'update-status error';
+                    updateStatusEl.textContent = `⚠ Using cached data from ${new Date(lastUpdate).toLocaleDateString()}`;
+                    
+                    renderApp();
+                    
+                    setTimeout(() => {
+                        updateStatusEl.style.display = 'none';
+                    }, 5000);
+                } else {
+                    // Use fallback data
+                    loadFallbackData();
+                    
+                    updateStatusEl.className = 'update-status error';
+                    updateStatusEl.textContent = '⚠ Using offline data. Pull down to refresh or tap update button.';
+                    
+                    renderApp();
+                }
+                
+                return false;
+            }
+        }
+        
+        // Fallback data (your original 100 draws)
+        function loadFallbackData() {
+            draws = [
+                ["2026-02-07", [8, 12, 15, 24, 34]],
+                ["2026-02-06", [5, 11, 26, 28, 39]],
+                ["2026-02-05", [8, 26, 28, 32, 38]],
+                ["2026-02-04", [9, 11, 25, 26, 29]],
+                ["2026-02-03", [5, 6, 13, 15, 23]],
+                ["2026-02-02", [1, 8, 23, 24, 36]],
+                ["2026-02-01", [6, 12, 19, 22, 25]],
+                ["2026-01-31", [2, 14, 18, 20, 35]],
+                ["2026-01-30", [9, 13, 18, 24, 28]],
+                ["2026-01-29", [2, 4, 8, 17, 21]],
+                ["2026-01-28", [5, 6, 13, 27, 32]],
+                ["2026-01-27", [1, 4, 22, 33, 39]],
+                ["2026-01-26", [1, 2, 5, 7, 20]],
+                ["2026-01-25", [1, 14, 19, 27, 37]],
+                ["2026-01-24", [15, 18, 25, 33, 35]],
+                ["2026-01-23", [11, 14, 15, 20, 36]],
+                ["2026-01-22", [6, 8, 11, 27, 28]],
+                ["2026-01-21", [13, 14, 18, 26, 32]],
+                ["2026-01-20", [7, 8, 13, 22, 28]],
+                ["2026-01-19", [11, 19, 22, 27, 30]],
+                ["2026-01-18", [16, 18, 19, 31, 37]],
+                ["2026-01-17", [8, 18, 28, 33, 39]],
+                ["2026-01-16", [3, 8, 16, 31, 33]],
+                ["2026-01-15", [6, 18, 28, 32, 36]],
+                ["2026-01-14", [2, 9, 12, 25, 39]],
+                ["2026-01-13", [4, 9, 25, 27, 35]],
+                ["2026-01-12", [13, 18, 27, 28, 35]],
+                ["2026-01-11", [7, 16, 17, 19, 35]],
+                ["2026-01-10", [12, 13, 15, 24, 34]],
+                ["2026-01-09", [23, 25, 28, 29, 35]],
+                ["2026-01-08", [2, 15, 19, 24, 36]],
+                ["2026-01-07", [2, 3, 9, 11, 31]],
+                ["2026-01-06", [1, 10, 28, 31, 39]],
+                ["2026-01-05", [5, 9, 15, 21, 24]],
+                ["2026-01-04", [9, 19, 20, 26, 32]],
+                ["2026-01-03", [14, 17, 18, 19, 34]],
+                ["2026-01-02", [3, 13, 22, 31, 38]],
+                ["2026-01-01", [13, 14, 24, 25, 35]],
+                ["2025-12-31", [1, 3, 9, 11, 21]],
+                ["2025-12-30", [10, 12, 22, 28, 37]],
+                ["2025-12-29", [1, 8, 13, 17, 20]],
+                ["2025-12-28", [1, 21, 22, 33, 35]],
+                ["2025-12-27", [8, 9, 20, 26, 36]],
+                ["2025-12-26", [2, 6, 7, 8, 35]],
+                ["2025-12-25", [5, 17, 20, 29, 38]],
+                ["2025-12-24", [7, 11, 18, 28, 30]],
+                ["2025-12-23", [5, 14, 15, 19, 26]],
+                ["2025-12-22", [1, 14, 16, 18, 19]],
+                ["2025-12-21", [11, 28, 29, 32, 37]],
+                ["2025-12-20", [3, 10, 14, 26, 31]],
+                ["2025-12-19", [8, 18, 23, 28, 38]],
+                ["2025-12-18", [7, 12, 13, 21, 32]],
+                ["2025-12-17", [3, 9, 19, 26, 31]],
+                ["2025-12-16", [6, 15, 16, 22, 31]],
+                ["2025-12-15", [9, 17, 22, 26, 36]],
+                ["2025-12-14", [6, 16, 23, 31, 32]],
+                ["2025-12-13", [2, 3, 22, 24, 32]],
+                ["2025-12-12", [16, 18, 27, 32, 38]],
+                ["2025-12-11", [7, 13, 23, 26, 30]],
+                ["2025-12-10", [1, 2, 5, 10, 17]],
+                ["2025-12-09", [10, 15, 16, 20, 33]],
+                ["2025-12-08", [7, 31, 33, 35, 38]],
+                ["2025-12-07", [11, 13, 14, 19, 39]],
+                ["2025-12-06", [9, 11, 12, 13, 34]],
+                ["2025-12-05", [9, 10, 16, 27, 36]],
+                ["2025-12-04", [16, 21, 30, 33, 34]],
+                ["2025-12-03", [6, 7, 28, 29, 32]],
+                ["2025-12-02", [6, 16, 18, 20, 33]],
+                ["2025-12-01", [1, 2, 20, 30, 38]],
+                ["2025-11-30", [2, 5, 8, 24, 33]],
+                ["2025-11-29", [2, 10, 27, 28, 34]],
+                ["2025-11-28", [13, 14, 21, 23, 32]],
+                ["2025-11-27", [10, 24, 28, 31, 37]],
+                ["2025-11-26", [2, 3, 21, 25, 27]],
+                ["2025-11-25", [3, 5, 7, 18, 24]],
+                ["2025-11-24", [5, 17, 20, 36, 39]],
+                ["2025-11-23", [3, 16, 21, 35, 38]],
+                ["2025-11-22", [9, 11, 21, 31, 35]],
+                ["2025-11-21", [10, 11, 17, 28, 33]],
+                ["2025-11-20", [8, 12, 24, 36, 39]],
+                ["2025-11-19", [1, 7, 9, 24, 27]],
+                ["2025-11-18", [2, 3, 6, 12, 39]],
+                ["2025-11-17", [1, 5, 7, 10, 11]],
+                ["2025-11-16", [3, 6, 17, 20, 37]],
+                ["2025-11-15", [4, 9, 13, 23, 35]],
+                ["2025-11-14", [4, 13, 24, 32, 37]],
+                ["2025-11-13", [6, 14, 16, 25, 35]],
+                ["2025-11-12", [1, 13, 23, 29, 35]],
+                ["2025-11-11", [3, 5, 8, 11, 28]],
+                ["2025-11-10", [6, 15, 29, 31, 37]],
+                ["2025-11-09", [5, 15, 21, 22, 24]],
+                ["2025-11-08", [6, 10, 13, 14, 19]],
+                ["2025-11-07", [9, 17, 31, 37, 38]],
+                ["2025-11-06", [5, 6, 11, 15, 38]],
+                ["2025-11-05", [11, 14, 24, 25, 36]],
+                ["2025-11-04", [8, 15, 18, 23, 24]],
+                ["2025-11-03", [7, 9, 20, 27, 36]],
+                ["2025-11-02", [4, 11, 13, 33, 39]],
+                ["2025-11-01", [1, 3, 11, 13, 32]]
+            ];
+        }
+        
+        // Render the entire app
+        function renderApp() {
+            const mainContent = document.getElementById('mainContent');
+            
+            // Calculate statistics
+            const frequency = {};
+            const appearances = {};
+            
+            for (let i = 1; i <= 39; i++) {
+                frequency[i] = 0;
+                appearances[i] = [];
+            }
+            
+            draws.forEach(([date, numbers], index) => {
+                numbers.forEach(num => {
+                    frequency[num]++;
+                    appearances[num].push(index);
+                });
+            });
+            
+            const avgSum = draws.reduce((acc, [date, nums]) => acc + nums.reduce((a, b) => a + b, 0), 0) / draws.length;
+            const sortedByFreq = Object.entries(frequency).sort((a, b) => b[1] - a[1]);
+            
+            // Calculate pairs
+            const pairs = {};
+            draws.forEach(([date, numbers]) => {
+                for (let i = 0; i < numbers.length; i++) {
+                    for (let j = i + 1; j < numbers.length; j++) {
+                        const pair = [numbers[i], numbers[j]].sort((a, b) => a - b).join('-');
+                        pairs[pair] = (pairs[pair] || 0) + 1;
+                    }
+                }
+            });
+            
+            // Calculate triplets
+            const triplets = {};
+            draws.forEach(([date, numbers]) => {
+                for (let i = 0; i < numbers.length; i++) {
+                    for (let j = i + 1; j < numbers.length; j++) {
+                        for (let k = j + 1; k < numbers.length; k++) {
+                            const triplet = [numbers[i], numbers[j], numbers[k]].sort((a, b) => a - b).join('-');
+                            triplets[triplet] = (triplets[triplet] || 0) + 1;
+                        }
+                    }
+                }
+            });
+            
+            // Build HTML
+            let html = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Draws Analyzed</div>
+                        <div class="stat-value">${draws.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Most Frequent Number</div>
+                        <div class="stat-value">${sortedByFreq[0][0]} (${sortedByFreq[0][1]}×)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Least Frequent Number</div>
+                        <div class="stat-value">${sortedByFreq[sortedByFreq.length-1][0]} (${sortedByFreq[sortedByFreq.length-1][1]}×)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Average Sum</div>
+                        <div class="stat-value">${avgSum.toFixed(1)}</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>📊 Individual Number Frequency Distribution</h2>
+                    <div class="chart-container">
+                        <canvas id="frequencyChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>🔥 Hot & Cold Numbers</h2>
+                    <div class="insight">
+                        <div class="insight-title">Understanding Hot & Cold Numbers</div>
+                        Hot numbers (red gradient) have appeared most frequently in the last ${draws.length} draws, while cold numbers (lighter colors) have appeared least frequently.
+                    </div>
+                    <div id="hotColdGrid" class="number-grid"></div>
+                </div>
+
+                <div class="section">
+                    <h2>🔢 Number Combination Patterns</h2>
+                    
+                    <div class="insight">
+                        <div class="insight-title">🔍 Most Common Number Pairs</div>
+                        <div>These pairs of numbers have appeared together most frequently:</div>
+                        <div id="commonPairs" style="margin-top: 10px;"></div>
+                    </div>
+                    
+                    <div class="insight">
+                        <div class="insight-title">🎯 Most Common Triplets</div>
+                        <div>These three-number combinations have appeared together most frequently:</div>
+                        <div id="commonTriplets" style="margin-top: 10px;"></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>📋 Recent Draw History</h2>
+                    <table class="pattern-table">
+                        <thead>
+                            <tr>
+                                <th>Draw Date</th>
+                                <th>Winning Numbers</th>
+                                <th>Sum</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentDraws"></tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h2>🔄 Number Reoccurrence Analysis</h2>
+                    <div class="insight">
+                        <div class="insight-title">Gap Analysis (Sorted by Avg Gap)</div>
+                        <div>Numbers are sorted by average gap between appearances - shorter gaps indicate more frequent reoccurrence.</div>
+                    </div>
+                    <table class="combination-table">
+                        <thead>
+                            <tr>
+                                <th>Number</th>
+                                <th>Total Appearances</th>
+                                <th>Avg Gap Between Draws</th>
+                                <th>Last Seen</th>
+                                <th>Draws Ago</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gapAnalysis"></tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h2>💡 Key Statistical Insights</h2>
+                    <div id="insights"></div>
+                </div>
+            `;
+            
+            mainContent.innerHTML = html;
+            
+            // Create chart
+            const ctx = document.getElementById('frequencyChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(frequency),
+                    datasets: [{
+                        label: 'Times Drawn',
+                        data: Object.values(frequency),
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: true },
+                        title: {
+                            display: true,
+                            text: `Number Frequency Across ${draws.length} Draws`
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Times Drawn' }
+                        },
+                        x: {
+                            title: { display: true, text: 'Number (1-39)' }
+                        }
+                    }
+                }
+            });
+            
+            // Populate hot/cold grid
+            const hotColdGrid = document.getElementById('hotColdGrid');
+            sortedByFreq.forEach(([num, freq], index) => {
+                const div = document.createElement('div');
+                div.className = 'number-cell';
+                
+                if (index < 10) div.classList.add('hot');
+                else if (index < 20) div.classList.add('warm');
+                else if (index < 30) div.classList.add('cool');
+                else div.classList.add('cold');
+                
+                div.innerHTML = `<div style="font-size: 1.4em;">${num}</div><div style="font-size: 0.8em;">${freq}×</div>`;
+                hotColdGrid.appendChild(div);
+            });
+            
+            // Populate pairs
+            const topPairs = Object.entries(pairs)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10)
+                .map(([pair, count]) => `<strong>${pair}</strong> appeared together ${count} times`)
+                .join('<br>');
+            document.getElementById('commonPairs').innerHTML = topPairs;
+            
+            // Populate triplets
+            const topTriplets = Object.entries(triplets)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8)
+                .map(([triplet, count]) => `<strong>${triplet}</strong> appeared together ${count} times`)
+                .join('<br>');
+            document.getElementById('commonTriplets').innerHTML = topTriplets;
+            
+            // Recent draws table
+            const recentDrawsTable = document.getElementById('recentDraws');
+            draws.slice(0, 25).forEach(([date, numbers]) => {
+                const sum = numbers.reduce((a, b) => a + b, 0);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${date}</td>
+                    <td><strong>${numbers.join(', ')}</strong></td>
+                    <td>${sum}</td>
+                `;
+                recentDrawsTable.appendChild(tr);
+            });
+            
+            // Gap analysis
+            const gapData = [];
+            for (let num = 1; num <= 39; num++) {
+                const freq = frequency[num];
+                const numAppearances = appearances[num];
+                let totalGap = 0;
+                let avgGap = null;
+                
+                if (numAppearances.length > 1) {
+                    for (let i = 1; i < numAppearances.length; i++) {
+                        totalGap += numAppearances[i] - numAppearances[i-1];
+                    }
+                    avgGap = totalGap / (numAppearances.length - 1);
+                }
+                
+                const lastSeen = numAppearances.length > 0 ? numAppearances[numAppearances.length - 1] : -1;
+                const currentGap = lastSeen >= 0 ? 0 - lastSeen : draws.length;
+                
+                gapData.push({ num, freq, avgGap, lastSeen, currentGap });
+            }
+            
+            gapData.sort((a, b) => {
+                if (a.avgGap === null && b.avgGap === null) return 0;
+                if (a.avgGap === null) return 1;
+                if (b.avgGap === null) return -1;
+                return a.avgGap - b.avgGap;
+            });
+            
+            const gapAnalysisTable = document.getElementById('gapAnalysis');
+            gapData.forEach((data, index) => {
+                const tr = document.createElement('tr');
+                if (index < 10 && data.avgGap !== null) tr.className = 'frequent-row';
+                
+                tr.innerHTML = `
+                    <td><strong>${data.num}</strong></td>
+                    <td>${data.freq}</td>
+                    <td>${data.avgGap !== null ? data.avgGap.toFixed(1) + ' draws' : 'N/A (only 1 appearance)'}</td>
+                    <td>${data.lastSeen >= 0 ? draws[data.lastSeen][0] : 'Never'}</td>
+                    <td>${data.currentGap} draws ago</td>
+                `;
+                gapAnalysisTable.appendChild(tr);
+            });
+            
+            // Insights
+            const shortestGapNumbers = gapData
+                .filter(d => d.avgGap !== null)
+                .slice(0, 5)
+                .map(d => `${d.num} (${d.avgGap.toFixed(1)} draws)`);
+            
+            const insights = [
+                `Average sum of winning numbers is ${avgSum.toFixed(1)} (theoretical random average would be 100)`,
+                `Hottest numbers: ${sortedByFreq.slice(0, 5).map(([n]) => n).join(', ')} have appeared most frequently`,
+                `Coldest numbers: ${sortedByFreq.slice(-5).map(([n]) => n).join(', ')} have appeared least frequently`,
+                `Numbers with shortest reoccurrence gaps: ${shortestGapNumbers.join(', ')}`,
+                `Most common pair: ${Object.entries(pairs).sort((a, b) => b[1] - a[1])[0][0]} appeared ${Object.entries(pairs).sort((a, b) => b[1] - a[1])[0][1]} times`,
+                `Most common triplet: ${Object.entries(triplets).sort((a, b) => b[1] - a[1])[0][0]} appeared ${Object.entries(triplets).sort((a, b) => b[1] - a[1])[0][1]} times`
+            ];
+            
+            const insightsDiv = document.getElementById('insights');
+            insights.forEach(insight => {
+                const div = document.createElement('div');
+                div.className = 'insight';
+                div.innerHTML = `<div class="insight-title">💡 Insight</div>${insight}`;
+                insightsDiv.appendChild(div);
+            });
+            
+            // Show refresh button
+            document.getElementById('refreshButton').style.display = 'block';
+        }
+        
+        // Initialize app
+        async function init() {
+            await fetchLatestData();
+        }
+        
+        // Setup refresh button
+        document.getElementById('refreshButton').addEventListener('click', fetchLatestData);
+        
+        // Auto-refresh on pull-to-refresh (iOS)
+        let startY = 0;
+        let pulling = false;
+        
+        window.addEventListener('touchstart', (e) => {
+            if (window.scrollY === 0) {
+                startY = e.touches[0].pageY;
+                pulling = true;
+            }
+        });
+        
+        window.addEventListener('touchmove', (e) => {
+            if (pulling && window.scrollY === 0) {
+                const currentY = e.touches[0].pageY;
+                if (currentY - startY > 100) {
+                    pulling = false;
+                    fetchLatestData();
+                }
+            }
+        });
+        
+        window.addEventListener('touchend', () => {
+            pulling = false;
+        });
+        
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
