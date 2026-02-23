@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Tax Calculator — Federal & California</title>
+
+<!-- ═══ HOME SCREEN ICON (embedded, no external files needed) ═══ -->
+<!-- iOS: Add to Home Screen icon -->
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAADlklEQVR42u3dy1HDQBBFUSfgjReOn+SIA4gACkkz6n59FndHyZQ5NSWk+Tyez+eXlNLDlyCgJaAloCWgBbQEtAS0BLQEtICWgJaAloD+pff7rZMBDSzQQEMM9CDQYAEdARoooCNAgwR0DGiIgI4ADQ/QMaDBAToGNDRAx4AGBugY0LAAHQMaFKBjQEMCdAzou/84j88P/RLQMMejBrogaFCPowba6Ax0MmiYe6MGGmigU0HD3B810P4RjApoozPQQMMMNdBAA70HNMxQA30z6NfrNSKgG4GGGerLQcMMNdBAAw00zFADDTTQtUHDDDXQQANdETTMUMeAhhnq5aCNzvNAd9hW4WF0hroqaqCBBroyaJhno44CDTPUQAMNdEXQMEMNNNBAVwQNM9RAAw10RdAwQx0DGmaogQYa6IqgYYYaaKCBrggaZqiBBhroiqBhhjoGNMxQA/0H6B07c676/P9e92qkQBccnYG+HvSdqIEGGujdoFfeOwO9BvRdqIEGGuidoKs82bjiM3YiqwD6DtSlQVd6TAf08evtRA000EDvAF3tJQrQ5663CzXQQAO9GnTFV9zdQJ/5+VXf7Q7U5UBXna8BdI95HkADDfQq0JVn0wHdYzYe0EADvQJ09bnOq0DvfM1+B97dqIEGGuirQXdYiQJ0D9S3g+6yrAroHqiBBhroq0B3WvTqKUcP1EADDbRbDqDdcgAN9ATQ0x/bTQYd+dhu+ouVKfOhvSkEGujOoE1OmgPabDugge4I2gT/fNBWrAANdGfQFsnmgh65SNY2BrYxsC8H0EDbCgxoW4ENBq0eZ67YTldRBwiN3/BcWadhAS2gkw4NUtZZhUALaCfJykmyQAMNNNQwh4OGGmaggQa6MmioYQYaaKArg4YaZqCBBroyaKhhjgMNNcxAAw10ZdBQwww00EBXBg01zEADDXRl0FDPxhwJGuq5mIEGGugOoKGeiRlooIE+A3p3UN+LuY2TLr8o1DADDTTQUMPcFTPQQAMNNcxAAw000FDDPAg01DADLaChhhlooIEGGmqYgQYa6DzQUJ/v6HRNoBd1Zt40zG+ggQYa6MWgoT63CgVooIEGei1oqI+vEQS6KGiojy14BbowaO1ZZQ000EADDTTQQAtooIEGGmiggQYaaKCBBhpoAQ000EADDTTQQAMNNNBAAy2ggQYaaAloCWgJaAEtAS0BLQEtAS2gJaAloCWgpZ++AT5LUpmpR+lcAAAAAElFTkSuQmCC">
+<!-- Standard favicon -->
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAADlklEQVR42u3dy1HDQBBFUSfgjReOn+SIA4gACkkz6n59FndHyZQ5NSWk+Tyez+eXlNLDlyCgJaAloCWgBbQEtAS0BLQEtICWgJaAloD+pff7rZMBDSzQQEMM9CDQYAEdARoooCNAgwR0DGiIgI4ADQ/QMaDBAToGNDRAx4AGBugY0LAAHQMaFKBjQEMCdAzou/84j88P/RLQMMejBrogaFCPowba6Ax0MmiYe6MGGmigU0HD3B810P4RjApoozPQQMMMNdBAA70HNMxQA30z6NfrNSKgG4GGGerLQcMMNdBAAw00zFADDTTQtUHDDDXQQANdETTMUMeAhhnq5aCNzvNAd9hW4WF0hroqaqCBBroyaJhno44CDTPUQAMNdEXQMEMNNNBAVwQNM9RAAw10RdAwQx0DGmaogQYa6IqgYYYaaKCBrggaZqiBBhroiqBhhjoGNMxQA/0H6B07c676/P9e92qkQBccnYG+HvSdqIEGGujdoFfeOwO9BvRdqIEGGuidoKs82bjiM3YiqwD6DtSlQVd6TAf08evtRA000EDvAF3tJQrQ5663CzXQQAO9GnTFV9zdQJ/5+VXf7Q7U5UBXna8BdI95HkADDfQq0JVn0wHdYzYe0EADvQJ09bnOq0DvfM1+B97dqIEGGuirQXdYiQJ0D9S3g+6yrAroHqiBBhroq0B3WvTqKUcP1EADDbRbDqDdcgAN9ATQ0x/bTQYd+dhu+ouVKfOhvSkEGujOoE1OmgPabDugge4I2gT/fNBWrAANdGfQFsnmgh65SNY2BrYxsC8H0EDbCgxoW4ENBq0eZ67YTldRBwiN3/BcWadhAS2gkw4NUtZZhUALaCfJykmyQAMNNNQwh4OGGmaggQa6MmioYQYaaKArg4YaZqCBBroyaKhhjgMNNcxAAw10ZdBQwww00EBXBg01zEADDXRl0FDPxhwJGuq5mIEGGugOoKGeiRlooIE+A3p3UN+LuY2TLr8o1DADDTTQUMPcFTPQQAMNNcxAAw000FDDPAg01DADLaChhhlooIEGGmqYgQYa6DzQUJ/v6HRNoBd1Zt40zG+ggQYa6MWgoT63CgVooIEGei1oqI+vEQS6KGiojy14BbowaO1ZZQ000EADDTTQQAtooIEGGmiggQYaaKCBBhpoAQ000EADDTTQQAMNNNBAAy2ggQYaaAloCWgJaAEtAS0BLQEtAS2gJaAloCWgpZ++AT5LUpmpR+lcAAAAAElFTkSuQmCC">
+<!-- iOS full-screen web app -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tax Calc">
+<!-- Theme color for browser chrome -->
+<meta name="theme-color" content="#0d0d0d">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#0d0d0d; --surface:#161616; --surface2:#1f1f1f; --surface3:#252525;
+    --border:#2a2a2a; --accent:#00e5a0; --accent2:#f59e0b;
+    --danger:#f87171; --refund:#34d399; --text:#e8e8e8; --muted:#6b6b6b;
+    --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.5;min-height:100vh;padding-bottom:100px}
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px;position:sticky;top:0;z-index:100}
+  header h1{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
+  header p{font-size:11px;color:var(--muted);margin-top:1px}
+  .tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 20px}
+  .tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;padding:12px 16px 10px;text-transform:uppercase;transition:color .15s,border-color .15s;-webkit-tap-highlight-color:transparent}
+  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab-panel{display:none}.tab-panel.active{display:block}
+  .container{padding:20px;max-width:600px;margin:0 auto}
+  .section{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+  .section-title{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+  .field{margin-bottom:16px}.field:last-child{margin-bottom:0}
+  label{display:block;font-size:13px;font-weight:500;color:#aaa;margin-bottom:6px}
+  label .hint{font-size:11px;color:var(--muted);font-weight:400;display:block;margin-top:1px}
+  input[type=number],input[type=text],select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:17px;padding:12px 14px;-webkit-appearance:none;appearance:none;outline:none;transition:border-color .15s}
+  input[type=number]:focus,select:focus{border-color:var(--accent)}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b6b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+  .row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .wh-row{display:flex;gap:8px;align-items:flex-end}.wh-row input{flex:1}
+  .auto-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--accent);font-family:var(--mono);font-size:11px;padding:0 12px;cursor:pointer;white-space:nowrap;height:46px;-webkit-tap-highlight-color:transparent}
+  .calc-btn{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:560px;background:var(--accent);color:#000;font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:none;border-radius:12px;padding:16px;cursor:pointer;z-index:200;box-shadow:0 8px 32px rgba(0,229,160,.3);-webkit-tap-highlight-color:transparent}
+  .calc-btn:active{opacity:.85}
+  /* Data editor */
+  .data-section{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden}
+  .dsh{background:var(--surface2);padding:14px 16px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+  .dsh .chev{font-size:10px;color:var(--muted);transition:transform .2s}
+  .dsh.open .chev{transform:rotate(180deg)}
+  .dsb{display:none;padding:16px}.dsb.open{display:block}
+  .bracket-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+  .bracket-row input{font-size:14px;padding:8px 10px;border-radius:6px}
+  .inp-top{flex:2}.inp-rate{flex:1}
+  .last-lbl{font-family:var(--mono);font-size:12px;color:var(--muted);flex:2;padding:8px 10px}
+  .btn-sm{background:var(--surface3);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--mono);font-size:13px;padding:6px 10px;-webkit-tap-highlight-color:transparent}
+  .btn-sm.add{color:var(--accent);border-color:rgba(0,229,160,.3)}
+  .btn-sm.rm{color:var(--danger);border-color:rgba(248,113,113,.2);width:32px;text-align:center;flex-shrink:0}
+  .bk-actions{display:flex;gap:8px;margin-top:10px}
+  .sub-lbl{font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em}
+  .ded-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ded-grid .field{margin-bottom:0}.ded-grid label{font-size:12px}
+  .ded-grid input{font-size:14px;padding:8px 10px}
+  .yr-actions{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+  .btn-act{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;font-family:var(--mono);font-size:12px;padding:10px 14px;-webkit-tap-highlight-color:transparent;flex:1;min-width:110px;text-align:center}
+  .btn-act.primary{border-color:rgba(0,229,160,.4);color:var(--accent)}
+  .status-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .stab{background:var(--surface3);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--mono);font-size:11px;padding:6px 12px;-webkit-tap-highlight-color:transparent}
+  .stab.active{background:rgba(0,229,160,.1);border-color:rgba(0,229,160,.4);color:var(--accent)}
+  hr.div{border:none;border-top:1px solid var(--border);margin:16px 0}
+  /* Results */
+  .result-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden}
+  .rbh{background:var(--surface2);padding:14px 20px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--border)}
+  .rr{display:flex;justify-content:space-between;align-items:baseline;padding:10px 20px;border-bottom:1px solid var(--border);gap:12px}
+  .rr:last-child{border-bottom:none}
+  .rl{font-size:13px;color:#aaa;flex:1}.rv{font-family:var(--mono);font-size:14px;color:var(--text);text-align:right;white-space:nowrap}
+  .rr.hi .rl{color:var(--text);font-weight:500}.rr.hi .rv{font-size:16px;font-weight:600}
+  .rr.due .rv{color:var(--danger)}.rr.ref .rv{color:var(--refund)}
+  .rr.ind .rl{padding-left:14px;font-size:12px;color:var(--muted)}
+  .total-block{background:var(--surface2);border:1px solid var(--accent);border-radius:12px;padding:20px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .ti{text-align:center}.ti .tl{font-size:11px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em}
+  .ti .tv{font-family:var(--mono);font-size:22px;font-weight:600;margin-top:4px}
+  .ti .tv.due{color:var(--danger)}.ti .tv.ref{color:var(--refund)}
+  .sdiv{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;padding:8px 20px 4px;opacity:.6}
+  .disclaimer{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:90px}
+  .disclaimer strong{color:var(--accent2)}
+  .err{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);border-radius:8px;color:var(--danger);font-size:13px;padding:12px 16px;margin-bottom:16px;display:none}
+  .info{background:rgba(0,229,160,.07);border:1px solid rgba(0,229,160,.2);border-radius:8px;color:var(--accent);font-size:12px;padding:12px 16px;margin-bottom:16px;font-family:var(--mono);line-height:1.5}
+  /* Modal */
+  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;padding:20px}
+  .modal-backdrop.open{display:flex}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,.6)}
+  .modal-title{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+  .modal-msg{font-size:14px;color:#ccc;line-height:1.6;margin-bottom:18px}
+  .modal input[type=number],.modal input[type=text],.modal select{font-size:15px;margin-bottom:14px}
+  .modal-btns{display:flex;gap:10px;justify-content:flex-end}
+  .modal-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;font-family:var(--mono);font-size:12px;padding:10px 18px;-webkit-tap-highlight-color:transparent}
+  .modal-btn.ok{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600}
+  .modal-btn.danger{border-color:rgba(248,113,113,.4);color:var(--danger)}
+  .modal-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--accent);border-radius:10px;color:var(--accent);font-family:var(--mono);font-size:12px;padding:10px 20px;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+  .modal-toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <h1>⬡ Tax Calculator</h1>
+  <p>Federal &amp; California — edit tax data for any year</p>
+</header>
+<div class="tab-bar">
+  <button class="tab-btn active" id="tb0">Calculator</button>
+  <button class="tab-btn" id="tb1">Tax Data</button>
+  <button class="tab-btn" id="tb2">Results</button>
+</div>
+
+<!-- CALCULATOR TAB -->
+<div id="tab0" class="tab-panel active">
+<div class="container">
+  <div class="err" id="errMsg"></div>
+  <div class="section">
+    <div class="section-title">Filing Information</div>
+    <div class="row-2">
+      <div class="field"><label>Tax Year</label>
+        <select id="taxYear"></select>
+      </div>
+      <div class="field"><label>Filing Status</label>
+        <select id="filingStatus">
+          <option value="mfj">Married Filing Jointly</option>
+          <option value="single">Single</option>
+          <option value="hoh">Head of Household</option>
+          <option value="mfs">Married Filing Separately</option>
+        </select>
+      </div>
+    </div>
+    <div class="row-2">
+      <div class="field"><label>Your Age<span class="hint">As of Dec 31 of tax year</span></label>
+        <input type="number" id="age1" min="0" max="120" placeholder="65" inputmode="numeric">
+      </div>
+      <div class="field"><label>Spouse Age<span class="hint">Leave blank if single</span></label>
+        <input type="number" id="age2" min="0" max="120" placeholder="—" inputmode="numeric">
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Income</div>
+    <div class="field"><label>Social Security Benefits<span class="hint">Total gross SS received (both spouses)</span></label>
+      <input type="number" id="ssBenefits" min="0" placeholder="0" inputmode="decimal">
+    </div>
+    <div class="field"><label>Retirement Withdrawals (401k / IRA / Pension)<span class="hint">Total pre-tax distributions</span></label>
+      <input type="number" id="retirement" min="0" placeholder="0" inputmode="decimal">
+    </div>
+    <div class="field"><label>Other Taxable Income<span class="hint">Wages, interest, dividends, capital gains, etc.</span></label>
+      <input type="number" id="otherIncome" min="0" placeholder="0" inputmode="decimal">
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Withholding Already Taken</div>
+    <div class="field"><label>Federal Withholding<span class="hint">AUTO = withholding rate × retirement withdrawals</span></label>
+      <div class="wh-row">
+        <input type="number" id="fedWH" min="0" placeholder="0" inputmode="decimal">
+        <button class="auto-btn" onclick="autoWH('fed')">AUTO</button>
+      </div>
+    </div>
+    <div class="field"><label>California Withholding<span class="hint">AUTO = CA withholding rate × retirement withdrawals</span></label>
+      <div class="wh-row">
+        <input type="number" id="caWH" min="0" placeholder="0" inputmode="decimal">
+        <button class="auto-btn" onclick="autoWH('ca')">AUTO</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button class="calc-btn" onclick="calculate()">Calculate Taxes →</button>
+</div>
+
+<!-- TAX DATA TAB -->
+<div id="tab1" class="tab-panel">
+<div class="container">
+  <div class="info">Edit brackets, deductions, and thresholds for any year. Data is saved in your browser. When new year figures are published, tap <strong>+ Add New Year</strong> (it copies the most recent year as a template), then update the numbers and save.</div>
+  <div class="section">
+    <div class="section-title">Manage Years</div>
+    <div class="field"><label>Year to Edit</label>
+      <select id="editYear" onchange="loadEditor()"></select>
+    </div>
+    <div class="yr-actions">
+      <button class="btn-act primary" onclick="addYear()">+ Add New Year</button>
+      <button class="btn-act" onclick="copyYear()" style="color:var(--accent2);border-color:rgba(245,158,11,.3)">Copy From…</button>
+      <button class="btn-act" onclick="deleteYear()" style="color:var(--danger);border-color:rgba(248,113,113,.3)">Delete Year</button>
+    </div>
+  </div>
+  <div id="editor" style="display:none">
+    <div class="data-section">
+      <div class="dsh open" onclick="toggleDS(this)">Federal Tax Brackets <span class="chev">▼</span></div>
+      <div class="dsb open"><div class="status-tabs" id="fedSTabs"></div><div id="fedBrackets"></div></div>
+    </div>
+    <div class="data-section">
+      <div class="dsh open" onclick="toggleDS(this)">Federal Deductions &amp; SS Thresholds <span class="chev">▼</span></div>
+      <div class="dsb open" id="fedDeds"></div>
+    </div>
+    <div class="data-section">
+      <div class="dsh open" onclick="toggleDS(this)">California Tax Brackets <span class="chev">▼</span></div>
+      <div class="dsb open"><div class="status-tabs" id="caSTabs"></div><div id="caBrackets"></div></div>
+    </div>
+    <div class="data-section">
+      <div class="dsh open" onclick="toggleDS(this)">California Standard Deductions <span class="chev">▼</span></div>
+      <div class="dsb open" id="caDeds"></div>
+    </div>
+    <div class="data-section">
+      <div class="dsh open" onclick="toggleDS(this)">Mandatory Withholding Rates <span class="chev">▼</span></div>
+      <div class="dsb open" id="whEditor"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:80px">
+      <button class="btn-act primary" style="flex:2" onclick="saveYear()">✓ Save Changes</button>
+      <button class="btn-act" onclick="resetYear()">Reset Default</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- RESULTS TAB -->
+<div id="tab2" class="tab-panel">
+<div class="container">
+  <div id="results" style="display:none">
+    <div id="totalBlock" class="total-block"></div>
+    <div id="fedResults" class="result-block"></div>
+    <div id="caResults" class="result-block"></div>
+    <div class="disclaimer"><strong>⚠ Disclaimer:</strong> Estimates only — not tax advice. Consult a qualified tax professional. Do not use for filing.</div>
+  </div>
+  <div id="noRes" style="padding:40px 0;text-align:center;color:var(--muted);font-family:var(--mono);font-size:13px">No results yet.<br>Complete the Calculator tab and press Calculate.</div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modalBox">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-msg" id="modalMsg"></div>
+    <div id="modalInputWrap"></div>
+    <div class="modal-btns" id="modalBtns"></div>
+  </div>
+</div>
+<div class="modal-toast" id="toast"></div>
+
+<script>
+// ── DEFAULT DATA ──────────────────────────────────────────────
+const DEFAULTS = {
+  2025:{
+    federal:{
+      brackets:{
+        mfj:   [[23850,.10],[96950,.12],[206700,.22],[394600,.24],[501050,.32],[751600,.35],[null,.37]],
+        single:[[11925,.10],[48475,.12],[103350,.22],[197300,.24],[250525,.32],[626350,.35],[null,.37]],
+        hoh:   [[17000,.10],[64850,.12],[103350,.22],[197300,.24],[250500,.32],[626350,.35],[null,.37]],
+        mfs:   [[11925,.10],[48475,.12],[103350,.22],[197300,.24],[250525,.32],[375800,.35],[null,.37]],
+      },
+      standardDeduction:    {mfj:30000,single:15000,hoh:22500,mfs:15000},
+      additionalDeduction65:{mfj:1600, single:2000, hoh:2000, mfs:1600},
+      ssThresholds:         {mfj:[32000,44000],single:[25000,34000],hoh:[25000,34000],mfs:[25000,34000]},
+    },
+    california:{
+      brackets:{
+        mfj:   [[20824,.01],[49368,.02],[77918,.04],[108162,.06],[136700,.08],[698274,.093],[837922,.103],[1000000,.113],[null,.123]],
+        single:[[10412,.01],[24684,.02],[38959,.04],[54081,.06],[68350,.08],[349137,.093],[418961,.103],[1000000,.113],[null,.123]],
+        hoh:   [[20839,.01],[49371,.02],[63644,.04],[78765,.06],[93037,.08],[474824,.093],[569788,.103],[1000000,.113],[null,.123]],
+        mfs:   [[10412,.01],[24684,.02],[38959,.04],[54081,.06],[68350,.08],[349137,.093],[418961,.103],[500000,.113],[null,.123]],
+      },
+      standardDeduction:{mfj:10726,single:5363,hoh:10726,mfs:5363},
+    },
+    retirementWithholding:{federal:.20,california:.10},
+  },
+  2024:{
+    federal:{
+      brackets:{
+        mfj:   [[23200,.10],[94300,.12],[201050,.22],[383900,.24],[487450,.32],[731200,.35],[null,.37]],
+        single:[[11600,.10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[609350,.35],[null,.37]],
+        hoh:   [[16550,.10],[63100,.12],[100500,.22],[191950,.24],[243700,.32],[609350,.35],[null,.37]],
+        mfs:   [[11600,.10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[365600,.35],[null,.37]],
+      },
+      standardDeduction:    {mfj:29200,single:14600,hoh:21900,mfs:14600},
+      additionalDeduction65:{mfj:1550, single:1950, hoh:1950, mfs:1550},
+      ssThresholds:         {mfj:[32000,44000],single:[25000,34000],hoh:[25000,34000],mfs:[25000,34000]},
+    },
+    california:{
+      brackets:{
+        mfj:   [[20824,.01],[49368,.02],[77918,.04],[108162,.06],[136700,.08],[698274,.093],[837922,.103],[1000000,.113],[null,.123]],
+        single:[[10412,.01],[24684,.02],[38959,.04],[54081,.06],[68350,.08],[349137,.093],[418961,.103],[1000000,.113],[null,.123]],
+        hoh:   [[20839,.01],[49371,.02],[63644,.04],[78765,.06],[93037,.08],[474824,.093],[569788,.103],[1000000,.113],[null,.123]],
+        mfs:   [[10412,.01],[24684,.02],[38959,.04],[54081,.06],[68350,.08],[349137,.093],[418961,.103],[500000,.113],[null,.123]],
+      },
+      standardDeduction:{mfj:10726,single:5363,hoh:10726,mfs:5363},
+    },
+    retirementWithholding:{federal:.20,california:.10},
+  },
+  2023:{
+    federal:{
+      brackets:{
+        mfj:   [[22000,.10],[89075,.12],[190750,.22],[364200,.24],[462500,.32],[693750,.35],[null,.37]],
+        single:[[11000,.10],[44725,.12],[95375,.22],[182050,.24],[231250,.32],[578125,.35],[null,.37]],
+        hoh:   [[15700,.10],[59850,.12],[95350,.22],[182050,.24],[231250,.32],[578100,.35],[null,.37]],
+        mfs:   [[11000,.10],[44725,.12],[95375,.22],[182050,.24],[231250,.32],[346875,.35],[null,.37]],
+      },
+      standardDeduction:    {mfj:27700,single:13850,hoh:20800,mfs:13850},
+      additionalDeduction65:{mfj:1500, single:1850, hoh:1850, mfs:1500},
+      ssThresholds:         {mfj:[32000,44000],single:[25000,34000],hoh:[25000,34000],mfs:[25000,34000]},
+    },
+    california:{
+      brackets:{
+        mfj:   [[20824,.01],[49368,.02],[77918,.04],[108162,.06],[136700,.08],[698274,.093],[837922,.103],[1000000,.113],[null,.123]],
+        single:[[10412,.01],[24684,.02],[38959,.04],[54081,.06],[68350,.08],[349137,.093],[418961,.103],[1000000,.113],[null,.123]],
+        hoh:   [[20839,.01],[49371,.02],[63644,.04],[78765,.06],[93037,.08],[474824,.093],[569788,.103],[1000000,.113],[null,.123]],
+        mfs:   [[10412,.01],[24684,.02],[38959,.04],[54081,.06],[68350,.08],[349137,.093],[418961,.103],[500000,.113],[null,.123]],
+      },
+      standardDeduction:{mfj:10726,single:5363,hoh:10726,mfs:5363},
+    },
+    retirementWithholding:{federal:.20,california:.10},
+  },
+};
+
+// null = top bracket (Infinity) in storage
+const INF = null; // stored as null, treated as Infinity in calc
+
+// ── STORAGE ──────────────────────────────────────────────────
+const SK = 'taxCalc_v3';
+function load(){
+  try{ const r=localStorage.getItem(SK); if(r) return JSON.parse(r); }catch(e){}
+  return null;
+}
+function save(d){ try{ localStorage.setItem(SK,JSON.stringify(d)); }catch(e){} }
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+// ── STATE ─────────────────────────────────────────────────────
+let TD = load() || clone(DEFAULTS);
+let editYr = null, fedSt = 'mfj', caSt = 'mfj';
+const STS = ['mfj','single','hoh','mfs'];
+const STL = {mfj:'MFJ',single:'Single',hoh:'HOH',mfs:'MFS'};
+const STFL = {mfj:'Married Filing Jointly',single:'Single',hoh:'Head of Household',mfs:'Married Filing Separately'};
+
+// ── TABS ──────────────────────────────────────────────────────
+function switchTab(n){
+  for(let i=0;i<3;i++){
+    document.getElementById('tab'+i).classList.toggle('active',i===n);
+    document.getElementById('tb'+i).classList.toggle('active',i===n);
+  }
+}
+document.getElementById('tb0').onclick=()=>switchTab(0);
+document.getElementById('tb1').onclick=()=>switchTab(1);
+document.getElementById('tb2').onclick=()=>switchTab(2);
+
+// ── YEAR DROPDOWNS ────────────────────────────────────────────
+function years(){ return Object.keys(TD).map(Number).sort((a,b)=>b-a); }
+
+function populateYears(){
+  const yrs = years();
+  ['taxYear','editYear'].forEach(id=>{
+    const s=document.getElementById(id), cur=s.value;
+    s.innerHTML=yrs.map(y=>`<option value="${y}">${y}</option>`).join('');
+    if(yrs.includes(parseInt(cur))) s.value=cur;
+  });
+}
+
+// ── EDITOR ────────────────────────────────────────────────────
+function toggleDS(h){
+  h.classList.toggle('open');
+  h.nextElementSibling.classList.toggle('open');
+}
+
+function loadEditor(){
+  editYr=parseInt(document.getElementById('editYear').value);
+  document.getElementById('editor').style.display='block';
+  renderFedSTabs(); renderFedB();
+  renderFedDeds();
+  renderCASTabs(); renderCAB();
+  renderCADeds();
+  renderWH();
+}
+
+// — bracket tab render helpers —
+function renderFedSTabs(){
+  document.getElementById('fedSTabs').innerHTML=STS.map(s=>
+    `<button class="stab ${s===fedSt?'active':''}" onclick="fedSt='${s}';renderFedSTabs();renderFedB()">${STL[s]}</button>`
+  ).join('');
+}
+function renderCASTabs(){
+  document.getElementById('caSTabs').innerHTML=STS.map(s=>
+    `<button class="stab ${s===caSt?'active':''}" onclick="caSt='${s}';renderCASTabs();renderCAB()">${STL[s]}</button>`
+  ).join('');
+}
+
+function renderBrackets(pfx, brackets){
+  const rows = brackets.map((row,i)=>{
+    const isTop = row[0]===null;
+    const topIn = isTop
+      ? `<span class="last-lbl">∞ top bracket</span>`
+      : `<input type="number" class="inp-top" id="${pfx}_t${i}" value="${row[0]}" inputmode="numeric" onchange="syncB('${pfx}')">`;
+    const rateVal = +(row[1]*100).toFixed(4);
+    return `<div class="bracket-row">
+      ${topIn}
+      <input type="number" class="inp-rate" id="${pfx}_r${i}" value="${rateVal}" step="0.001" min="0" max="100" inputmode="decimal" onchange="syncB('${pfx}')">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--muted);flex-shrink:0">%</span>
+      ${!isTop?`<button class="btn-sm rm" onclick="removeB('${pfx}',${i})">✕</button>`:''}
+    </div>`;
+  }).join('');
+  return `<div class="sub-lbl">Upper Limit → Rate (%)</div>${rows}
+    <div class="bk-actions"><button class="btn-sm add" onclick="addB('${pfx}')">+ Add Bracket</button></div>`;
+}
+
+function renderFedB(){ document.getElementById('fedBrackets').innerHTML=renderBrackets('fed',TD[editYr].federal.brackets[fedSt]); }
+function renderCAB(){  document.getElementById('caBrackets').innerHTML=renderBrackets('ca', TD[editYr].california.brackets[caSt]); }
+
+function syncB(pfx){
+  const st = pfx==='fed'?fedSt:caSt;
+  const bks = TD[editYr][pfx==='fed'?'federal':'california'].brackets[st];
+  bks.forEach((row,i)=>{
+    if(row[0]!==null){
+      const el=document.getElementById(`${pfx}_t${i}`);
+      if(el) row[0]=parseFloat(el.value)||0;
+    }
+    const re=document.getElementById(`${pfx}_r${i}`);
+    if(re) row[1]=(parseFloat(re.value)||0)/100;
+  });
+}
+
+function addB(pfx){
+  syncB(pfx);
+  const st=pfx==='fed'?fedSt:caSt;
+  const bks=TD[editYr][pfx==='fed'?'federal':'california'].brackets[st];
+  const li=bks.length-1;
+  const prevTop=bks[li-1]?bks[li-1][0]:0;
+  bks.splice(li,0,[prevTop+50000,0]);
+  if(pfx==='fed') renderFedB(); else renderCAB();
+}
+
+function removeB(pfx,idx){
+  syncB(pfx);
+  const st=pfx==='fed'?fedSt:caSt;
+  const bks=TD[editYr][pfx==='fed'?'federal':'california'].brackets[st];
+  if(bks.length<=2){showAlert('Cannot Remove','You need at least one bracket row plus the top bracket.');return;}
+  bks.splice(idx,1);
+  if(pfx==='fed') renderFedB(); else renderCAB();
+}
+
+// — deduction editors —
+function renderFedDeds(){
+  const f=TD[editYr].federal;
+  document.getElementById('fedDeds').innerHTML=`
+    <div class="sub-lbl">Standard Deduction</div>
+    <div class="ded-grid">${STS.map(s=>`<div class="field"><label>${STL[s]}</label><input type="number" id="fs_${s}" value="${f.standardDeduction[s]}" inputmode="numeric"></div>`).join('')}</div>
+    <hr class="div">
+    <div class="sub-lbl">Additional Deduction — Age 65+ (per qualifying person)</div>
+    <div class="ded-grid">${STS.map(s=>`<div class="field"><label>${STL[s]}</label><input type="number" id="fa_${s}" value="${f.additionalDeduction65[s]}" inputmode="numeric"></div>`).join('')}</div>
+    <hr class="div">
+    <div class="sub-lbl">SS Provisional Income Thresholds</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Below lower → 0% taxable. Between → up to 50%. Above upper → up to 85%.</p>
+    ${STS.map(s=>`<div class="sub-lbl" style="margin-top:10px">${STL[s]}</div>
+    <div class="row-2" style="margin-bottom:12px">
+      <div class="field"><label>Lower</label><input type="number" id="ssl_${s}" value="${f.ssThresholds[s][0]}" inputmode="numeric"></div>
+      <div class="field"><label>Upper</label><input type="number" id="ssu_${s}" value="${f.ssThresholds[s][1]}" inputmode="numeric"></div>
+    </div>`).join('')}`;
+}
+
+function renderCADeds(){
+  const c=TD[editYr].california;
+  document.getElementById('caDeds').innerHTML=`
+    <div class="sub-lbl">CA Standard Deduction</div>
+    <div class="ded-grid">${STS.map(s=>`<div class="field"><label>${STL[s]}</label><input type="number" id="cs_${s}" value="${c.standardDeduction[s]}" inputmode="numeric"></div>`).join('')}</div>`;
+}
+
+function renderWH(){
+  const w=TD[editYr].retirementWithholding;
+  document.getElementById('whEditor').innerHTML=`
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Applied to retirement distributions. Used by the AUTO button on the Calculator tab.</p>
+    <div class="row-2">
+      <div class="field"><label>Federal (%)</label><input type="number" id="wf" value="${+(w.federal*100).toFixed(1)}" step="0.1" min="0" max="100" inputmode="decimal"></div>
+      <div class="field"><label>California (%)</label><input type="number" id="wc" value="${+(w.california*100).toFixed(1)}" step="0.1" min="0" max="100" inputmode="decimal"></div>
+    </div>`;
+}
+
+// ── SAVE YEAR ─────────────────────────────────────────────────
+function saveYear(){
+  syncB('fed'); syncB('ca');
+  const f=TD[editYr].federal, c=TD[editYr].california;
+  STS.forEach(s=>{
+    f.standardDeduction[s]    =parseFloat(document.getElementById(`fs_${s}`).value)||0;
+    f.additionalDeduction65[s]=parseFloat(document.getElementById(`fa_${s}`).value)||0;
+    f.ssThresholds[s]=[parseFloat(document.getElementById(`ssl_${s}`).value)||0, parseFloat(document.getElementById(`ssu_${s}`).value)||0];
+    c.standardDeduction[s]=parseFloat(document.getElementById(`cs_${s}`).value)||0;
+  });
+  TD[editYr].retirementWithholding.federal   =(parseFloat(document.getElementById('wf').value)||0)/100;
+  TD[editYr].retirementWithholding.california=(parseFloat(document.getElementById('wc').value)||0)/100;
+  save(TD);
+  toast(`✓ Tax data for ${editYr} saved.`);
+}
+
+// ── MODAL SYSTEM ─────────────────────────────────────────────
+function closeModal(){ document.getElementById('modalBackdrop').classList.remove('open'); }
+
+// toast notification
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// Simple info/alert modal
+function showAlert(title,msg,cb){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalMsg').textContent=msg;
+  document.getElementById('modalInputWrap').innerHTML='';
+  document.getElementById('modalBtns').innerHTML=`<button class="modal-btn ok" id="mOk">OK</button>`;
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.getElementById('mOk').onclick=()=>{ closeModal(); if(cb) cb(); };
+}
+
+// Confirm modal
+function showConfirm(title,msg,onOk,okLabel='Confirm',danger=false){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalMsg').textContent=msg;
+  document.getElementById('modalInputWrap').innerHTML='';
+  document.getElementById('modalBtns').innerHTML=`
+    <button class="modal-btn" id="mCancel">Cancel</button>
+    <button class="modal-btn ok ${danger?'danger':''}" id="mOk">${okLabel}</button>`;
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.getElementById('mCancel').onclick=closeModal;
+  document.getElementById('mOk').onclick=()=>{ closeModal(); onOk(); };
+  if(danger) document.getElementById('mOk').style.cssText='background:var(--danger);border-color:var(--danger);color:#000;font-weight:600';
+}
+
+// Input modal
+function showInput(title,msg,placeholder,onOk){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalMsg').textContent=msg;
+  document.getElementById('modalInputWrap').innerHTML=`<input type="number" id="mInput" placeholder="${placeholder}" inputmode="numeric" style="width:100%;margin-bottom:14px">`;
+  document.getElementById('modalBtns').innerHTML=`
+    <button class="modal-btn" id="mCancel">Cancel</button>
+    <button class="modal-btn ok" id="mOk">OK</button>`;
+  document.getElementById('modalBackdrop').classList.add('open');
+  setTimeout(()=>document.getElementById('mInput').focus(),100);
+  document.getElementById('mCancel').onclick=closeModal;
+  document.getElementById('mOk').onclick=()=>{ const v=document.getElementById('mInput').value; closeModal(); onOk(v); };
+  document.getElementById('mInput').onkeydown=e=>{ if(e.key==='Enter'){ const v=e.target.value; closeModal(); onOk(v); }};
+}
+
+// Select modal
+function showSelect(title,msg,options,onOk){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalMsg').textContent=msg;
+  document.getElementById('modalInputWrap').innerHTML=`<select id="mSelect" style="width:100%;margin-bottom:14px">${options.map(o=>`<option value="${o}">${o}</option>`).join('')}</select>`;
+  document.getElementById('modalBtns').innerHTML=`
+    <button class="modal-btn" id="mCancel">Cancel</button>
+    <button class="modal-btn ok" id="mOk">Copy</button>`;
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.getElementById('mCancel').onclick=closeModal;
+  document.getElementById('mOk').onclick=()=>{ const v=document.getElementById('mSelect').value; closeModal(); onOk(v); };
+}
+
+// Close on backdrop click
+document.getElementById('modalBackdrop').onclick=function(e){ if(e.target===this) closeModal(); };
+
+// ── ADD / COPY / DELETE YEAR ──────────────────────────────────
+function addYear(){
+  showInput('Add New Year','Enter the tax year to add:','2026',inp=>{
+    const yr=parseInt(inp);
+    if(isNaN(yr)||yr<1990||yr>2099){ showAlert('Invalid Year','Please enter a 4-digit year between 1990 and 2099.'); return; }
+    if(TD[yr]){ showAlert('Already Exists',`Year ${yr} already exists. Select it from the dropdown to edit.`); return; }
+    const src=years()[0];
+    TD[yr]=clone(TD[src]);
+    save(TD); populateYears();
+    document.getElementById('editYear').value=yr;
+    loadEditor();
+    toast(`Year ${yr} added — update figures then save.`);
+  });
+}
+
+function copyYear(){
+  const tgt=parseInt(document.getElementById('editYear').value);
+  const avail=years().filter(y=>y!==tgt);
+  if(!avail.length){ showAlert('No Other Years','There are no other years to copy from.'); return; }
+  showSelect(`Copy Into ${tgt}`,`Select a year to copy its data into ${tgt}:`,avail,src=>{
+    src=parseInt(src);
+    showConfirm('Confirm Overwrite',`Replace all ${tgt} data with ${src} data? This will overwrite your current ${tgt} figures.`,()=>{
+      TD[tgt]=clone(TD[src]); save(TD); loadEditor();
+      toast(`Copied ${src} → ${tgt}. Update figures then save.`);
+    },'Overwrite',true);
+  });
+}
+
+function deleteYear(){
+  const yr=parseInt(document.getElementById('editYear').value);
+  if(years().length<=1){ showAlert('Cannot Delete','You must keep at least one year of tax data.'); return; }
+  showConfirm('Delete Year',`Permanently delete all tax data for ${yr}? This cannot be undone.`,()=>{
+    delete TD[yr]; save(TD); populateYears();
+    document.getElementById('editor').style.display='none';
+    const yrs=years();
+    if(yrs.length){ document.getElementById('editYear').value=yrs[0]; loadEditor(); }
+    toast(`Year ${yr} deleted.`);
+  },'Delete',true);
+}
+
+function resetYear(){
+  const yr=parseInt(document.getElementById('editYear').value);
+  if(!DEFAULTS[yr]){ showAlert('No Built-in Default',`Year ${yr} has no built-in default. Use "Copy From…" to seed it from another year.`); return; }
+  showConfirm('Reset to Default',`Reset ${yr} to built-in defaults? All your edits will be lost.`,()=>{
+    TD[yr]=clone(DEFAULTS[yr]); save(TD); loadEditor();
+    toast(`Year ${yr} reset to defaults.`);
+  },'Reset',true);
+}
+
+// ── CALCULATOR ────────────────────────────────────────────────
+function g(id){ return document.getElementById(id); }
+function n(id){ const v=parseFloat(g(id).value); return isNaN(v)?0:v; }
+
+function autoWH(type){
+  const ret=n('retirement');
+  const yr=parseInt(g('taxYear').value);
+  const rate=TD[yr].retirementWithholding[type==='fed'?'federal':'california']||0;
+  g(type==='fed'?'fedWH':'caWH').value=Math.round(ret*rate);
+}
+
+function applyBrackets(inc,bks){
+  if(inc<=0) return 0;
+  let tax=0,prev=0;
+  for(const [top,rate] of bks){
+    const isTop=top===null;
+    if(inc<=prev) break;
+    tax+=(Math.min(inc,isTop?inc:top)-prev)*rate;
+    prev=isTop?inc:(top);
+    if(isTop) break;
+  }
+  return tax;
+}
+
+function fmt(n){
+  const a=Math.abs(n);
+  return (n<0?'-$':'$')+a.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+}
+function fmtDue(n){
+  if(n>0) return {t:fmt(n)+' DUE',   fc:'due',tc:'due'};
+  if(n<0) return {t:fmt(-n)+' REFUND',fc:'ref',tc:'ref'};
+  return {t:'$0',fc:'',tc:''};
+}
+
+function calculate(){
+  const err=g('errMsg'); err.style.display='none';
+  const a1s=g('age1').value.trim();
+  if(!a1s){err.textContent='Please enter your age.';err.style.display='block';return;}
+
+  const yr  =parseInt(g('taxYear').value);
+  const st  =g('filingStatus').value;
+  const age1=parseInt(a1s)||0;
+  const a2s =g('age2').value.trim();
+  const age2=a2s!==''?(parseInt(a2s)||0):null;
+  const ss  =n('ssBenefits'), ret=n('retirement'), oth=n('otherIncome');
+  const fwh =n('fedWH'), cwh=n('caWH');
+
+  const data=TD[yr];
+  if(!data){err.textContent=`No tax data for ${yr}. Add it in the Tax Data tab.`;err.style.display='block';return;}
+
+  const fed=data.federal, ca=data.california;
+
+  // 65+ additional deduction
+  let addlPpl=0;
+  if(age1>=65) addlPpl++;
+  if(st==='mfj'&&age2!==null&&age2>=65) addlPpl++;
+  const addl65=(fed.additionalDeduction65[st]||0)*addlPpl;
+
+  // SS taxation — IRS worksheet
+  const [ssLow,ssHigh]=fed.ssThresholds[st]||[25000,34000];
+  const prov=oth+ret+0.5*ss;
+  let taxSS=0;
+  if(prov>ssHigh){
+    taxSS=Math.min(0.85*ss, 0.85*(prov-ssHigh)+0.5*Math.min(ssHigh-ssLow,Math.max(0,prov-ssLow)));
+  } else if(prov>ssLow){
+    taxSS=Math.min(0.5*ss, 0.5*(prov-ssLow));
+  }
+  taxSS=Math.max(0,Math.round(taxSS));
+
+  // Federal
+  const fAGI =oth+ret+taxSS;
+  const fDed =( fed.standardDeduction[st]||0)+addl65;
+  const fTaxInc=Math.max(0,fAGI-fDed);
+  const fTax=Math.round(applyBrackets(fTaxInc,fed.brackets[st]));
+  const fBal=fTax-fwh;
+
+  // California
+  const caInc =ret+oth;
+  const caDed =ca.standardDeduction[st]||0;
+  const caTaxInc=Math.max(0,caInc-caDed);
+  const caTax=Math.round(applyBrackets(caTaxInc,ca.brackets[st]));
+  const caBal=caTax-cwh;
+
+  const fd=fmtDue(fBal), cd=fmtDue(caBal);
+
+  g('totalBlock').innerHTML=`
+    <div class="ti"><div class="tl">Federal</div><div class="tv ${fd.tc}">${fd.t}</div></div>
+    <div class="ti"><div class="tl">California</div><div class="tv ${cd.tc}">${cd.t}</div></div>`;
+
+  g('fedResults').innerHTML=`
+    <div class="rbh">Federal — ${yr} · ${STFL[st]}</div>
+    <div class="sdiv">Provisional Income (SS Worksheet)</div>
+    <div class="rr"><span class="rl">Social Security (gross)</span><span class="rv">${fmt(ss)}</span></div>
+    <div class="rr"><span class="rl">Provisional income</span><span class="rv">${fmt(Math.round(prov))}</span></div>
+    <div class="rr ind"><span class="rl">= ${fmt(oth)} other + ${fmt(ret)} retirement + ${fmt(Math.round(ss*.5))} (50% SS)</span><span class="rv"></span></div>
+    <div class="rr"><span class="rl">SS thresholds (50% / 85%)</span><span class="rv">${fmt(ssLow)} / ${fmt(ssHigh)}</span></div>
+    <div class="rr hi"><span class="rl">Taxable SS Amount</span><span class="rv">${fmt(taxSS)}</span></div>
+    <div class="sdiv">Deductions</div>
+    <div class="rr"><span class="rl">Federal AGI</span><span class="rv">${fmt(fAGI)}</span></div>
+    <div class="rr"><span class="rl">Standard deduction (base)</span><span class="rv">${fmt(fed.standardDeduction[st]||0)}</span></div>
+    ${addl65>0?`<div class="rr ind"><span class="rl">+ Age 65+ additional (×${addlPpl})</span><span class="rv">${fmt(addl65)}</span></div>`:''}
+    <div class="rr ind"><span class="rl">= Total deduction</span><span class="rv">${fmt(fDed)}</span></div>
+    <div class="rr hi"><span class="rl">Federal Taxable Income</span><span class="rv">${fmt(fTaxInc)}</span></div>
+    <div class="sdiv">Tax</div>
+    <div class="rr hi"><span class="rl">Federal Tax Owed</span><span class="rv">${fmt(fTax)}</span></div>
+    <div class="rr"><span class="rl">Federal Withholding</span><span class="rv">(${fmt(fwh)})</span></div>
+    <div class="rr hi ${fd.fc}"><span class="rl">Balance Due / Refund</span><span class="rv">${fd.t}</span></div>`;
+
+  g('caResults').innerHTML=`
+    <div class="rbh">California — ${yr} · ${STFL[st]}</div>
+    <div class="sdiv">Income</div>
+    <div class="rr"><span class="rl">Social Security</span><span class="rv">Excluded (CA law)</span></div>
+    <div class="rr"><span class="rl">Retirement + Other</span><span class="rv">${fmt(ret)} + ${fmt(oth)}</span></div>
+    <div class="rr hi"><span class="rl">CA Gross Income</span><span class="rv">${fmt(caInc)}</span></div>
+    <div class="sdiv">Deductions</div>
+    <div class="rr"><span class="rl">CA Standard Deduction</span><span class="rv">${fmt(caDed)}</span></div>
+    <div class="rr hi"><span class="rl">CA Taxable Income</span><span class="rv">${fmt(caTaxInc)}</span></div>
+    <div class="sdiv">Tax</div>
+    <div class="rr hi"><span class="rl">California Tax Owed</span><span class="rv">${fmt(caTax)}</span></div>
+    <div class="rr"><span class="rl">CA Withholding</span><span class="rv">(${fmt(cwh)})</span></div>
+    <div class="rr hi ${cd.fc}"><span class="rl">Balance Due / Refund</span><span class="rv">${cd.t}</span></div>`;
+
+  g('results').style.display='block';
+  g('noRes').style.display='none';
+  switchTab(2);
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+(function(){
+  populateYears();
+  const yrs=years();
+  if(yrs.length){ document.getElementById('editYear').value=yrs[0]; loadEditor(); }
+})();
+</script>
+</body>
+</html>
